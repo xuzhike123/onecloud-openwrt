@@ -69,6 +69,17 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
+    - name: Inject FanchmWrt Packages & Feeds
+      run: |
+        # 1. 注入 FanchmWrt 软件源到 feeds 配置文件
+        FEEDS_TARGET="openwrt/feeds.conf.default"
+        echo "src-git fanchmwrt https://github.com/xuzhike123/fanchmwrt.git;fanchmwrt-25.12.4" >> $FEEDS_TARGET
+
+        # 2. 克隆你的 FanchmWrt 仓库并提取专属包与 Patch
+        git clone -b fanchmwrt-25.12.4 https://github.com/xuzhike123/fanchmwrt.git /tmp/fanchmwrt
+        cp -rf /tmp/fanchmwrt/package/* openwrt/package/ 2>/dev/null || true
+        [ -d /tmp/fanchmwrt/feeds_patches ] && cp -rf /tmp/fanchmwrt/feeds_patches openwrt/ 2>/dev/null || true
+
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -125,7 +136,7 @@ jobs:
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
-  
+
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
