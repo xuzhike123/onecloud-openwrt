@@ -69,16 +69,19 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Inject FanchmWrt Packages & Feeds
+    - name: Clean conflicts & Inject FanchmWrt
       run: |
-        # 1. 注入 FanchmWrt 软件源到 feeds 配置文件
-        FEEDS_TARGET="openwrt/feeds.conf.default"
-        echo "src-git fanchmwrt https://github.com/xuzhike123/fanchmwrt.git;fanchmwrt-25.12.4" >> $FEEDS_TARGET
+        cd openwrt
+        # 1. 清理主线源码中重名的旧版冲突包
+        rm -rf package/lean/luci-app-passwall
+        rm -rf package/lean/v2ray-geosite
+        rm -rf package/lean/v2ray-geoip
 
-        # 2. 克隆你的 FanchmWrt 仓库并提取专属包与 Patch
-        git clone -b fanchmwrt-25.12.4 https://github.com/xuzhike123/fanchmwrt.git /tmp/fanchmwrt
-        cp -rf /tmp/fanchmwrt/package/* openwrt/package/ 2>/dev/null || true
-        [ -d /tmp/fanchmwrt/feeds_patches ] && cp -rf /tmp/fanchmwrt/feeds_patches openwrt/ 2>/dev/null || true
+        # 2. 写入 FanchmWrt 源
+        echo "src-git fanchmwrt https://github.com/xuzhike123/fanchmwrt.git;fanchmwrt-25.12.4" >> feeds.conf.default
+
+        # 3. 预先建立交叉编译所需的结构目录
+        mkdir -p staging_dir/target-arm_cortex-a5+vfpv4_musl_eabi/pkginfo
 
     - name: Load custom feeds
       run: |
@@ -105,8 +108,6 @@ jobs:
       id: package
       run: |
         cd openwrt
-        # 补全交叉编译所需的 pkginfo 目录，防止 libgcc.version 写入报错
-        mkdir -p staging_dir/target-arm_cortex-a5+vfpv4_musl_eabi/pkginfo
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
