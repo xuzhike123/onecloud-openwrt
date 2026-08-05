@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# 1. 替换 Golang 编译工具链为兼容版本 (解决 PassWall 及其依赖的 Golang 编译死锁)
+# 1. 替换为兼容 PassWall 和 Sing-box 的 Golang 23.x 编译环境
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
-# 2. 安全清理冲突的 geoview（若存在）
-if [ -d "feeds/passwall_packages/geoview" ]; then
-    rm -rf feeds/passwall_packages/geoview
-fi
-# 强制更新 passwall_packages 依赖包仓库
-rm -rf feeds/passwall_packages
-git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall_packages
+# 2. 清理容易报错且玩客云不需要的蓝牙 (bluez) 源码包
+rm -rf feeds/packages/utils/bluez
+rm -rf package/lean/luci-app-passwall
