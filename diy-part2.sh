@@ -27,3 +27,6 @@ git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/l
 
 # 修改默认 IP (可选，默认 192.168.1.1)
 # sed -i 's/192.168.1.168/192.168.2.168/g' package/base-files/files/bin/config_generate
+# 取消勾选庞大且无用的蓝牙及重载组件，大幅加快编译速度并防止超时
+sed -i 's/CONFIG_PACKAGE_bluez-libs=y/# CONFIG_PACKAGE_bluez-libs is not set/' .config
+sed -i 's/CONFIG_PACKAGE_bluez-utils=y/# CONFIG_PACKAGE_bluez-utils is not set/' .config
