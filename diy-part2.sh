@@ -30,6 +30,7 @@ git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/l
 # 取消勾选庞大且无用的蓝牙及重载组件，大幅加快编译速度并防止超时
 sed -i 's/CONFIG_PACKAGE_bluez-libs=y/# CONFIG_PACKAGE_bluez-libs is not set/' .config
 sed -i 's/CONFIG_PACKAGE_bluez-utils=y/# CONFIG_PACKAGE_bluez-utils is not set/' .config
+
 # 1. 替换为兼容 FanchmWrt/PassWall 的最新 Golang 编译工具链
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
