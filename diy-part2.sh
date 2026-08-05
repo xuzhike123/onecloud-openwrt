@@ -21,3 +21,9 @@ sed -i 's/LEDE/OneCloud/g' package/base-files/files/bin/config_generate
 
 # 替换终端为bash
 sed -i 's/\/bin\/ash/\/bin\/bash/' package/base-files/files/etc/passwd
+# 强制使用最新的 Go 编译环境，防止 Passwall/Sing-box 编译报错
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
+
+# 修改默认 IP (可选，默认 192.168.1.1)
+# sed -i 's/192.168.1.168/192.168.2.168/g' package/base-files/files/bin/config_generate
