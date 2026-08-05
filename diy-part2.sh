@@ -8,3 +8,6 @@ git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/l
 if [ -d "feeds/passwall_packages/geoview" ]; then
     rm -rf feeds/passwall_packages/geoview
 fi
+# 强制更新 passwall_packages 依赖包仓库
+rm -rf feeds/passwall_packages
+git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/passwall_packages
