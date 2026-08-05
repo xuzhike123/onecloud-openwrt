@@ -120,7 +120,7 @@ jobs:
         cd openwrt
         echo -e "$(nproc) thread compile"
         echo "status=failed" >> $GITHUB_OUTPUT
-        if ! ( make -j$(nproc) || make -j1 || make -j1 V=s ); then
+        if ! ( make -j$(nproc) || make -j1 V=s ); then
             echo "❌ Make failed"
             exit 1
         fi
