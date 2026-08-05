@@ -21,7 +21,7 @@ sed -i 's/LEDE/OneCloud/g' package/base-files/files/bin/config_generate
 
 # 替换终端为bash
 sed -i 's/\/bin\/ash/\/bin\/bash/' package/base-files/files/etc/passwd
-# 强制使用最新的 Go 编译环境，防止 Passwall/Sing-box 编译报错
+# 替换为最新且兼容的 Golang 编译环境，修复 PassWall/Sing-Box 编译失败
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
