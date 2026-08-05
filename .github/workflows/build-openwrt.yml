@@ -105,6 +105,8 @@ jobs:
       id: package
       run: |
         cd openwrt
+        # 补全交叉编译所需的 pkginfo 目录，防止 libgcc.version 写入报错
+        mkdir -p staging_dir/target-arm_cortex-a5+vfpv4_musl_eabi/pkginfo
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
