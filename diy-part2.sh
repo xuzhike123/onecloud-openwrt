@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 1. 替换 Golang 编译工具链为兼容版本
+# 1. 彻底替换为兼容新版 PassWall / Sing-box 的 Golang 23.x 编译环境
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
-# 2. 删除玩客云极易引发 GCC 13/14 编译崩溃的蓝牙相关无用软件包
-rm -rf feeds/packages/utils/bluez
+# 2. 清理主线源码中重名且导致死循环冲突的 PassWall 软件包
 rm -rf package/lean/luci-app-passwall
+rm -rf feeds/packages/utils/bluez
 
-# 3. 修复基础配置文件生成权限
-sed -i 's/192.168.1.1/192.168.1.1/g' package/base-files/files/bin/config_generate
+# 3. 修复基础网络配置文件
+sed -i 's/192.168.1.168/192.168.1.168/g' package/base-files/files/bin/config_generate
