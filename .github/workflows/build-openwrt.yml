@@ -69,18 +69,10 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Clean conflicts & Inject FanchmWrt
+    - name: Clean environment & Prep
       run: |
         cd openwrt
-        # 1. 清理主线源码中重名的旧版冲突包
-        rm -rf package/lean/luci-app-passwall
-        rm -rf package/lean/v2ray-geosite
-        rm -rf package/lean/v2ray-geoip
-
-        # 2. 写入 FanchmWrt 源
-        echo "src-git fanchmWrt https://github.com/xuzhike123/fanchmwrt.git;fanchmwrt-25.12.4" >> feeds.conf.default
-
-        # 3. 预先建立交叉编译所需的结构目录
+        # 预先建立交叉编译所需的结构目录，防止 toolchain 报错
         mkdir -p staging_dir/target-arm_cortex-a5+vfpv4_musl_eabi/pkginfo
 
     - name: Load custom feeds
@@ -121,9 +113,8 @@ jobs:
         echo -e "$(nproc) thread compile"
         echo "status=failed" >> $GITHUB_OUTPUT
         
-        # 多线程并行编译失败后降级为单线程 (V=s) 打印精准报错
         if ! make -j$(nproc); then
-            echo "⚠️ 并行编译失败，正在切换单线程调试模式 (V=s) 捕获错误..."
+            echo "⚠️ 并行编译失败，降级单线程 (V=s) 打印详细报错..."
             if ! make -j1 V=s; then
                 echo "❌ Make failed"
                 exit 1
