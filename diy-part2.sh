@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# 1. 彻底替换为兼容新版 PassWall / Sing-box 的 Golang 23.x 编译环境
+# 1. 替换 Golang 编译工具链为兼容版本 (Passwall/Xray 编译必需)
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 23.x feeds/packages/lang/golang
 
-# 2. 清理主线源码中重名且导致死循环冲突的 PassWall 软件包
-rm -rf package/lean/luci-app-passwall
+# 2. 清理冲突的旧包并引入官方适配 Lean 源码的 passwall-packages 依赖
 rm -rf feeds/packages/utils/bluez
+rm -rf package/lean/luci-app-passwall
+git clone https://github.com/xiaorouji/openwrt-passwall-packages.git package/openwrt-passwall-packages
 
-# 3. 修复基础网络配置文件
-sed -i 's/192.168.1.168/192.168.1.168/g' package/base-files/files/bin/config_generate
+# 3. 设置默认登录 IP 为 192.168.10.99
+sed -i 's/192.168.1.1/192.168.10.99/g' package/base-files/files/bin/config_generate
