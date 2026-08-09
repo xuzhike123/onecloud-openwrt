@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# 1. 修改默认后台 IP 为 192.168.10.99
-sed -i 's/192.168.1.1/192.168.10.99/g' package/base-files/files/bin/config_generate
+# 1. 修改默认后台 IP 为 192.168.1.99
+sed -i 's/192.168.1.1/192.168.1.99/g' package/base-files/files/bin/config_generate
 
 # 2. 升级 Golang 编译工具链为 23.x 兼容版本（PassWall 编译必需）
 rm -rf feeds/packages/lang/golang
