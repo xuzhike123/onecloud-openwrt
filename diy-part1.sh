@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# 取消注释或清理原有的 passwall 软件源，防止重复
+# 1. 自动删除 feeds.conf.default 中可能存在的重复 passwall 行
 sed -i '/passwall/d' feeds.conf.default
 
-# 重新追加 Clean 的 PassWall 软件源
+# 2. 重新追加干净的源定义
 echo 'src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main' >> feeds.conf.default
-echo 'src-git passwall url?id=1xiaorouji/openwrt-passwall.git;main' >> feeds.conf.default
+echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main' >> feeds.conf.default
