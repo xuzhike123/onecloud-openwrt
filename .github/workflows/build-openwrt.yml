@@ -1,9 +1,4 @@
 #
-# https://github.com/P3TERX/Actions-OpenWrt
-#
-# File: .github/workflows/openwrt-builder.yml
-# Description: Build OpenWrt using GitHub Actions
-#
 # Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
 #
 # This is free software, licensed under the MIT License.
@@ -69,12 +64,6 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Clean environment & Prep
-      run: |
-        cd openwrt
-        # 预先建立交叉编译所需的结构目录，防止 toolchain 报错
-        mkdir -p staging_dir/target-arm_cortex-a5+vfpv4_musl_eabi/pkginfo
-
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -101,8 +90,8 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        make download -j8
         make download -j8 || make download -j1 || true
+        find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
