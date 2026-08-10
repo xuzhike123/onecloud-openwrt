@@ -1,2 +1,2 @@
 #!/bin/bash
-# 不对 feeds.conf.default 做任何写入，防止源冲突
+# 保持为空，防止对 feeds.conf.default 进行任何重复写入
